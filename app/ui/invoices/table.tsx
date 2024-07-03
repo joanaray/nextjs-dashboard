@@ -13,7 +13,7 @@ export default async function InvoicesTable({
 }) {
   const invoices = await fetchFilteredInvoices(query, currentPage);
 
-  return (
+  return (    
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
@@ -78,6 +78,9 @@ export default async function InvoicesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
+            {invoices.length < 1 && <tr>
+              <td colSpan={5} className='text-center py-3'>No invoices were found for "{query}"</td>
+              </tr>}
               {invoices?.map((invoice) => (
                 <tr
                   key={invoice.id}
