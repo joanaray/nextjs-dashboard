@@ -18,9 +18,7 @@ export default async function InvoicesTable({
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {invoices.length < 1 && <tr>
-              <td colSpan={5} className='text-center py-3'>No invoices were found for "{query}"</td>
-              </tr>}
+            {invoices.length < 1 && <div className="mb-2 w-full rounded-md bg-white p-4"><p>No invoices were found for "{query}"</p></div>}
             {invoices?.map((invoice) => (
               <div
                 key={invoice.id}
