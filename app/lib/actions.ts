@@ -29,3 +29,5 @@ export async function createInvoice(formData: FormData) {
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices')
 }
+
+export async function updateForm(){}
