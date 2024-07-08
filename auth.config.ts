@@ -1,13 +1,13 @@
 import type { NextAuthConfig } from "next-auth";
 
-export const authConfig = {
+export const authConfig: NextAuthConfig = {
     pages: {
         signIn: '/login',
     },
     callbacks: {
         async redirect({url, baseUrl}) {
             if(url.startsWith('/')) return `${baseUrl}${url}`;
-            else if(new URL(url).origin === baseUrl) return url;
+            else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         },
         authorized({auth, request:{nextUrl} }) {
