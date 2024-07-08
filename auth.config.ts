@@ -10,17 +10,12 @@ export const authConfig: NextAuthConfig = {
             else if (new URL(url).origin === baseUrl) return url;
             return baseUrl;
         },
-        authorized({auth, request:{nextUrl} }) {
-            const isLoggedIn = !!auth?.user;
-            const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-            if (isOnDashboard) {
-                if (isLoggedIn) return true;
-                return false; // Redirect unauthenticated users to login page
-            } else if (isLoggedIn) {
-                return Response.redirect(new URL('/dashboard', nextUrl));
+        async session({session, user}) {
+            if(session && user) {
+                session.user = user;
             }
-            return true;
-        },
+            return session;
+        }
     },
     providers: []
 } satisfies NextAuthConfig;
