@@ -107,7 +107,7 @@ export async function deleteInvoice(id:string) {
 }
 
 /**
- * 
+ * User authentication
  */
 export async function authenticate(
     prevState:string | undefined,
