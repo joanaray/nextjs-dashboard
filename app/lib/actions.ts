@@ -107,7 +107,7 @@ export async function deleteInvoice(id:string) {
 }
 
 /**
- * User authentication
+ * 
  */
 export async function authenticate(
     prevState:string | undefined,
@@ -115,7 +115,6 @@ export async function authenticate(
 ) {
     try {
         await signIn('credentials', formData);
-        redirect('/dashboard');
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {
