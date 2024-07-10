@@ -160,7 +160,7 @@ export async function createCustomer(formData:FormData) {
 
     await sql`
         INSERT INTO customers (name, email, image_url)
-        VALUES (${customerName},${customerEmail},/customers/${customerPhoto})
+        VALUES (${customerName},${customerEmail},${customerPhoto})
     `;
 
     revalidatePath('/dashboard/customers');

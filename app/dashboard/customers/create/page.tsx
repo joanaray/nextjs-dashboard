@@ -1,7 +1,5 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import { createCustomer } from "@/app/lib/actions";
-import { fetchCustomers } from "@/app/lib/data";
-import { CustomerField } from "@/app/lib/definitions";
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { Metadata } from "next";
@@ -11,9 +9,7 @@ export const metadata: Metadata = {
     title: 'Add new Customer',
 }
 
-const customers = await fetchCustomers();
-
-export default async function Page({customers}:{customers:CustomerField[]}){
+export default async function Page(){
 
     return(
         <main>
@@ -47,10 +43,13 @@ export default async function Page({customers}:{customers:CustomerField[]}){
                     {/** Customer photo */}
                     <div>
                         <label htmlFor="customerPhoto" className="mb-2 block text-sm font-medium">Photo</label>
+                        
                         <div className="relative mt-2 rounded-md">
-                            <div className="relative">
-                                <input type="text" name="customerPhoto" id="customerPhoto" className=" rounded-md border border-gray-200 bg-white px-[14px] py-3 pl-10 text-sm outline-2" />
+                            <div className="flex w-full rounded-md border border-gray-200 py-2 text-sm outline-2">
                                 <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                                <p className="text-sm pl-10">Using https://thispersondoesnotexist.com/ to fetch a random pic.</p>
+                                <input type="hidden" name="customerPhoto" id="customerPhoto" className=" peer block" value="https://thispersondoesnotexist.com/"/>
+                                
                             </div>
                         </div>
                         </div>
