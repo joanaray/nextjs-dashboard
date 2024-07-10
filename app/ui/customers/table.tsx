@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Search from '@/app/ui/search';
-import { CreateCustomer } from '@/app/ui/customers/buttons';
+import { CreateCustomer, UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { FormattedCustomersTable } from '@/app/lib/definitions';
 
@@ -15,8 +15,8 @@ export default async function CustomersTable({
 }) {
   return (
     <div className="w-full">
-      <div>
-        <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
+      <div className="flex w-full items-center justify-between">
+      <h1 className={`${lusitana.className} text-2x1`}>
         {pageTitle}
       </h1>
       </div>
@@ -66,9 +66,13 @@ export default async function CustomersTable({
                         <p className="font-medium">{customer.total_paid}</p>
                       </div>
                     </div>
-                    <div className="pt-4 text-sm">
+                    <div className="flex w-full items-center justify-between border-b py-5">
                       <p>{customer.total_invoices} invoices</p>
                     </div>
+                    <div className="flex pt-4 text-sm justify-end gap-2">
+                      <UpdateCustomer />
+                      <DeleteCustomer id={customer.id} />
+                  </div>
                   </div>
                 ))}
               </div>
@@ -87,9 +91,12 @@ export default async function CustomersTable({
                     <th scope="col" className="px-3 py-5 font-medium">
                       Total Pending
                     </th>
-                    <th scope="col" className="px-4 py-5 font-medium">
+                    <th scope="col" className="px-3 py-5 font-medium">
                       Total Paid
                     </th>
+                    <th scope="col" className="relative py-3 pl-6 pr-3">
+                  <span className="sr-only">Edit</span>
+                </th>
                   </tr>
                 </thead>
 
@@ -118,8 +125,14 @@ export default async function CustomersTable({
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {customer.total_pending}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
+                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {customer.total_paid}
+                      </td>
+                      <td className="whitespace-nowrap  bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
+                        <div className="flex justify-end gap-3">
+                          <UpdateCustomer />
+                          <DeleteCustomer id={customer.id} />
+                        </div>
                       </td>
                     </tr>
                   ))}

@@ -166,3 +166,17 @@ export async function createCustomer(formData:FormData) {
     revalidatePath('/dashboard/customers');
     redirect('/dashboard/customers');
 }
+
+/**
+ * Delete Customer
+ */
+export async function deleteCustomer(id:string){
+    try{
+        await sql`
+        DELETE FROM customers WHERE id = ${id}`;
+        revalidatePath('/dashboard/customers');
+    } catch (error){
+        console.log(error);
+        return { message: 'Database Error: Failed to Delete Customer.' }
+    }
+}
