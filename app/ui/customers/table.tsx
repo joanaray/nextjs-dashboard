@@ -1,27 +1,37 @@
 import Image from 'next/image';
-import { lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
-import {
-  CustomersTableType,
-  FormattedCustomersTable,
-} from '@/app/lib/definitions';
+import { CreateCustomer } from '@/app/ui/customers/buttons';
+import { lusitana } from '@/app/ui/fonts';
+import { FormattedCustomersTable } from '@/app/lib/definitions';
 
 export default async function CustomersTable({
+  query,
+  pageTitle,
   customers,
 }: {
+  query: string;
+  pageTitle: string;
   customers: FormattedCustomersTable[];
 }) {
   return (
     <div className="w-full">
-      <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
-        Customers
+      <div>
+        <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
+        {pageTitle}
       </h1>
-      <Search />
+      </div>
+      <div className="mt-4 flex items-end justify-between gap-2 md:mt-8">
+        <Search pageTitle={pageTitle} />
+        <CreateCustomer />
+      </div>
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
               <div className="md:hidden">
+                {customers.length < 1 &&
+                <div className='w-full rounded-md bg-white p-4 text-center'>No results found for &quot;{query}&quot;</div>
+                }
                 {customers?.map((customer) => (
                   <div
                     key={customer.id}
@@ -84,6 +94,7 @@ export default async function CustomersTable({
                 </thead>
 
                 <tbody className="divide-y divide-gray-200 text-gray-900">
+                  {customers.length < 1 && <tr className="group"><td colSpan={5} className='bg-white py-5 px-4 text-center'>No results found for &quot;{query}&quot;</td></tr>}
                   {customers.map((customer) => (
                     <tr key={customer.id} className="group">
                       <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">

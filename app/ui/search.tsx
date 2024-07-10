@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {useDebouncedCallback} from 'use-debounce';
 
-export default function Search() {
+export default function Search({pageTitle} : {pageTitle: string}) {
   const searchParams = useSearchParams();
   const pathName=usePathname();
   const {replace} = useRouter();
@@ -25,7 +25,7 @@ export default function Search() {
   return (
     <div className="relative flex flex-1 flex-shrink-0 flex-wrap">
       <label htmlFor="search" className="w-full">
-        Search invoices
+        Search {pageTitle}
       </label>
       <div className='flex align-items-center'>
         <input

@@ -6,6 +6,11 @@ import { lusitana } from "@/app/ui/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { fetchInvoicesPages } from "@/app/lib/data";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Invoices',
+};
 
 export default async function Page({
   searchParams,
@@ -15,6 +20,7 @@ export default async function Page({
       page?: string;
   };
 }) {
+  const pageTitle = 'Invoices'
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
  
@@ -26,7 +32,7 @@ export default async function Page({
           <h1 className={`${lusitana.className} text-2x1`}>Invoices</h1>
         </div>
         <div className="mt-4 flex items-end justify-between gap-2 md:mt-8">
-          <Search />
+          <Search pageTitle={pageTitle} />
           <CreateInvoice />
         </div>
         <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>

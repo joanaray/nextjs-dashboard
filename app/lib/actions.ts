@@ -107,7 +107,7 @@ export async function deleteInvoice(id:string) {
 }
 
 /**
- * 
+ * User Authentication
  */
 export async function authenticate(
     prevState:string | undefined,
@@ -126,4 +126,43 @@ export async function authenticate(
         }
         throw error;
     }
+}
+
+/**
+ * Create new Customer
+ */
+const CustomerFormSchema = z.object({
+    id: z.string(),
+    customerName: z.string(),
+    customerEmail: z.string(),
+    customerPhoto: z.string(),
+});
+
+const CreateCustomer = CustomerFormSchema.omit({id:true});
+
+export async function createCustomer(formData:FormData) {
+    const {customerName, customerEmail, customerPhoto } = CreateCustomer.parse({
+        customerName: formData.get('customerName'),
+        customerEmail: formData.get('customerEmail'),
+        customerPhoto: formData.get('customerPhoto'),
+    });
+
+    /**
+     * type definitions for your data
+     * 
+     * export type Customer = {
+        id: string;
+        name: string;
+        email: string;
+        image_url: string;
+        };
+     */
+
+    await sql`
+        INSERT INTO customers (name, email, image_url)
+        VALUES (${customerName},${customerEmail},/customers/${customerPhoto})
+    `;
+
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
 }
