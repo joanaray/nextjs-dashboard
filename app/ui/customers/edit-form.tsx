@@ -48,7 +48,7 @@ export default function EditCustomerForm({customer}: {customer: Customer}){
                         <div className="relative mt-2 rounded-md">
                             <div className="flex w-full rounded-md border border-gray-200 py-2 text-sm outline-2">
                                 <PhotoIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-                                <p className="text-sm pl-10">Let's not mess with photo updates.</p>
+                                <p className="text-sm pl-10">Let&apos;s not mess with photo updates.</p>
                                 <input type="hidden" name="customerPhoto" id="customerPhoto" className=" peer block" defaultValue={customer.image_url}/>                                
                             </div>
                         </div>
