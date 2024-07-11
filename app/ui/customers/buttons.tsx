@@ -11,9 +11,9 @@ export function CreateCustomer() {
     )
 }
 
-export function UpdateCustomer() {
+export function UpdateCustomer({id}: {id:string}) {
     return (
-        <Link href={``} className="rounded-md border p-2 hover:bg-gray-100" title="Edit Customer">
+        <Link href={`/dashboard/customers/${id}/edit`} className="rounded-md border p-2 hover:bg-gray-100" title="Edit Customer">
             <PencilIcon className="w-5" />
         </Link>
     )

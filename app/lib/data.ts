@@ -1,5 +1,6 @@
 import { sql } from '@vercel/postgres';
 import {
+  Customer,
   CustomerField,
   CustomersTableType,
   InvoiceForm,
@@ -183,6 +184,26 @@ export async function fetchCustomers() {
   }
 }
 
+export async function fetchCustomerById(id: string) {
+  try{
+    const data = await sql<Customer>`
+    SELECT
+      customers.id,
+      customers.name,
+      customers.email,
+      customers.image_url
+    FROM customers
+    WHERE customers.id = ${id}; 
+    `;
+
+    const customer = data.rows.map((customer)=>({...customer}));
+
+    return customer[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch customer.');
+  }
+}
 export async function fetchFilteredCustomers(query: string) {
   try {
     const data = await sql<CustomersTableType>`

@@ -168,6 +168,33 @@ export async function createCustomer(formData:FormData) {
 }
 
 /**
+ * Update Customer
+ */
+const UpdateCustomer = CustomerFormSchema.omit({id:true});
+
+export async function updateCustomer(id: string, formData:FormData) {
+    const {customerName, customerEmail, customerPhoto } = UpdateCustomer.parse({
+        customerName: formData.get('customerName'),
+        customerEmail: formData.get('customerEmail'),
+        customerPhoto: formData.get('customerPhoto'),
+    });
+
+    try{
+        await sql`
+        UPDATE customers
+        SET name = ${customerName}, email = ${customerEmail}, image_url = ${customerPhoto}
+        WHERE id = ${id} `;
+
+        revalidatePath('/dashboard/customers');
+    } catch (error) {
+        console.log(error);
+        return { message: 'Database Error: Failed to Update Customer.' }
+    }
+
+    redirect('/dashboard/customers');
+}
+
+/**
  * Delete Customer
  */
 export async function deleteCustomer(id:string){
