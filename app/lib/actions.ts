@@ -14,7 +14,7 @@ const FormSchema = z.object({
     id: z.string(),
     customerId: z.string({
         invalid_type_error: 'Please select a customer.',
-    }),
+    }).min(1, 'Please select a customer.'),
     amount: z.coerce
     .number()
     .gt(0, { message: 'Please enter an amount greater than $0.'}),
@@ -76,13 +76,22 @@ export async function createInvoice(prevState: State, formData: FormData) {
  * Update Invoice
  */
 
-export async function updateInvoice(id:string, formData:FormData) {
+export async function updateInvoice(prevState: State, id:string, formData:FormData) {
 
-    const {customerId, amount, status} = InvoiceSchema.parse({
+    const validatedFields = InvoiceSchema.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
     });
+
+    if(!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Update Invoice.',
+        };
+    }
+
+    const {customerId, amount, status} = validatedFields.data;
     const amountInCents = amount * 100;
 
     try {
