@@ -23,7 +23,7 @@ const FormSchema = z.object({
     }),
     date: z.string(),
 });
-const CreateInvoice = FormSchema.omit({id:true, date:true});
+const InvoiceSchema = FormSchema.omit({id:true, date:true});
 
 export type State = {
     errors?: {
@@ -35,11 +35,19 @@ export type State = {
 };
 
 export async function createInvoice(prevState: State, formData: FormData) {
-    const validatedFields = CreateInvoice.safeParse( {
+
+    const validatedFields = InvoiceSchema.safeParse( {
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
     });
+
+    console.log('Form data: ', {
+        customerId: formData.get('customerId'),
+        amount: formData.get('amount'),
+        status: formData.get('status'),
+    });
+    console.log('Form validation: ', validatedFields);
 
     if(!validatedFields.success) {
         return {
@@ -67,10 +75,10 @@ export async function createInvoice(prevState: State, formData: FormData) {
 /**
  * Update Invoice
  */
-const UpdateInvoice = FormSchema.omit({id:true, date:true});
 
 export async function updateInvoice(id:string, formData:FormData) {
-    const {customerId, amount, status} = UpdateInvoice.parse({
+
+    const {customerId, amount, status} = InvoiceSchema.parse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
@@ -132,21 +140,54 @@ export async function authenticate(
 /**
  * Create new Customer
  */
+
+// Zod verifies the type of data but not if it's empty, so this form kept getting validated even if the fields were empty. Added .min() to text inputs to make sure they wouldn't be left empty by the user and extra .email() to the email input (even though it's already type=email, but I guess this sort of redundancy may be welcomed. )
 const CustomerFormSchema = z.object({
     id: z.string(),
-    customerName: z.string(),
-    customerEmail: z.string(),
-    customerPhoto: z.string(),
+    customerName: z.string({
+        invalid_type_error: `Please enter the customer's name.`,
+    }).min(1, `Please enter the customer's name.`),
+    customerEmail: z.string({
+        invalid_type_error: `Please enter the customer's email.`,
+    }).email('Please enter a valid email.'),
+    customerPhoto: z.string({
+        invalid_type_error: `Please enter the customer's photo.`,
+    }),
 });
 
 const CreateCustomer = CustomerFormSchema.omit({id:true});
 
-export async function createCustomer(formData:FormData) {
-    const {customerName, customerEmail, customerPhoto } = CreateCustomer.parse({
+export type CustomerState = {
+    errors?: {
+        customerName?: string[];
+        customerEmail?: string[];
+        customerPhoto?: string[];
+    };
+    message?: string | null;
+};
+export async function createCustomer(prevState: CustomerState, formData: FormData) {
+
+    const validatedFields = CreateCustomer.safeParse({
         customerName: formData.get('customerName'),
         customerEmail: formData.get('customerEmail'),
         customerPhoto: formData.get('customerPhoto'),
     });
+
+    console.log('Form Data:', {
+        customerName: formData.get('customerName'),
+        customerEmail: formData.get('customerEmail'),
+        customerPhoto: formData.get('customerPhoto'),
+    });
+    console.log('Validation Result:', validatedFields);
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Create New Customer.',
+        };
+    }
+
+    const {customerName, customerEmail, customerPhoto} = validatedFields.data;
 
     /**
      * type definitions for your data
@@ -158,13 +199,17 @@ export async function createCustomer(formData:FormData) {
         image_url: string;
         };
      */
-
-    await sql`
+    try {
+        await sql`
         INSERT INTO customers (name, email, image_url)
-        VALUES (${customerName},${customerEmail},${customerPhoto})
-    `;
-
-    revalidatePath('/dashboard/customers');
+        VALUES (${customerName}, ${customerEmail}, ${customerPhoto})`;
+        revalidatePath('/dashboard/customers');
+    } catch (error) {
+        return {
+            message: 'Database Error: Failed to Create New Customer.',
+        };
+    }
+    
     redirect('/dashboard/customers');
 }
 
