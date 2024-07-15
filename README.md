@@ -15,4 +15,12 @@ Here's what I added to the initial tutorial:
 * Removed placeholder prop from forms for accessibility reasons. [Read about it here](https://www.deque.com/blog/accessible-forms-the-problem-with-placeholders/)
 * Implemented Suspense for the Customers page with its own fallback.
 
+### Access
+
+To access the dashboard:
+
+username: user@nextmail.com
+password: 123456
+ 
 Anyway, feel free to snoop around and any constructive feedback is very welcome :) .
+
