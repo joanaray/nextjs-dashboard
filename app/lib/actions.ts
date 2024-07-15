@@ -164,7 +164,7 @@ const CustomerFormSchema = z.object({
     }),
 });
 
-const CreateCustomer = CustomerFormSchema.omit({id:true});
+const CustomerData = CustomerFormSchema.omit({id:true});
 
 export type CustomerState = {
     errors?: {
@@ -176,7 +176,7 @@ export type CustomerState = {
 };
 export async function createCustomer(prevState: CustomerState, formData: FormData) {
 
-    const validatedFields = CreateCustomer.safeParse({
+    const validatedFields = CustomerData.safeParse({
         customerName: formData.get('customerName'),
         customerEmail: formData.get('customerEmail'),
         customerPhoto: formData.get('customerPhoto'),
@@ -225,14 +225,21 @@ export async function createCustomer(prevState: CustomerState, formData: FormDat
 /**
  * Update Customer
  */
-const UpdateCustomer = CustomerFormSchema.omit({id:true});
 
-export async function updateCustomer(id: string, formData:FormData) {
-    const {customerName, customerEmail, customerPhoto } = UpdateCustomer.parse({
+export async function updateCustomer(prevSate: CustomerState, id: string, formData:FormData) {
+    const validatedFields = CustomerData.safeParse({
         customerName: formData.get('customerName'),
         customerEmail: formData.get('customerEmail'),
         customerPhoto: formData.get('customerPhoto'),
     });
+
+    if(!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Update Customer info.',
+        }
+    }
+    const {customerName, customerEmail, customerPhoto} = validatedFields.data;
 
     try{
         await sql`
@@ -243,7 +250,7 @@ export async function updateCustomer(id: string, formData:FormData) {
         revalidatePath('/dashboard/customers');
     } catch (error) {
         console.log(error);
-        return { message: 'Database Error: Failed to Update Customer.' }
+        return { message: 'Database Error: Failed to Update Customer info.' }
     }
 
     redirect('/dashboard/customers');

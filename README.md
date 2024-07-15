@@ -14,4 +14,4 @@ Here's what I added to the initial tutorial:
 * Updated the search feature to include a "No results found for [searched query]" in case no results were returned.
 * Removed placeholder prop from forms for accessibility reasons. [Read about it here](https://www.deque.com/blog/accessible-forms-the-problem-with-placeholders/)
 
-Anyway, feel free to snoop around.
+Anyway, feel free to snoop around and any constructive feedback is very welcome :) .
