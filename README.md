@@ -13,5 +13,6 @@ Here's what I added to the initial tutorial:
 * It's possible to create, delete and update customers (except for photos because I wasn't sure how to handle file upload so I'm just feeding that part from [thispersondoesnotexist.com](https://thispersondoesnotexist.com/)).
 * Updated the search feature to include a "No results found for [searched query]" in case no results were returned.
 * Removed placeholder prop from forms for accessibility reasons. [Read about it here](https://www.deque.com/blog/accessible-forms-the-problem-with-placeholders/)
+* Implemented Suspense for the Customers page with its own fallback.
 
 Anyway, feel free to snoop around and any constructive feedback is very welcome :) .

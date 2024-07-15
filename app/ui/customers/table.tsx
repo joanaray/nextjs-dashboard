@@ -4,7 +4,9 @@ import { CreateCustomer, UpdateCustomer, DeleteCustomer } from '@/app/ui/custome
 import { lusitana } from '@/app/ui/fonts';
 import { FormattedCustomersTable } from '@/app/lib/definitions';
 import { fetchCustomersPages } from '@/app/lib/data';
-import Pagination from '../pagination';
+import Pagination from '@/app/ui/pagination';
+import { Suspense } from 'react';
+import { CustomersTableSkeleton } from '@/app/ui/skeletons';
 
 export default async function CustomersTable({
   query,
@@ -29,6 +31,7 @@ export default async function CustomersTable({
         <Search pageTitle={pageTitle} />
         <CreateCustomer />
       </div>
+      <Suspense fallback={<CustomersTableSkeleton />}>      
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -147,9 +150,10 @@ export default async function CustomersTable({
           </div>
         </div>
       </div>
+      </Suspense>
       <div className="mt-5 flex w-full justify-center">
         < Pagination totalPages={totalPages} />
-      </div>      
+      </div>     
     </div>
   );
 }
