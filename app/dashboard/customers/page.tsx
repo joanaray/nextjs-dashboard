@@ -15,8 +15,10 @@ export default async function Page({
     page?: string,
   }
 }) {
-  const query = searchParams?.query || ''
-  const totalCustomers = await fetchFilteredCustomers(query);
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+
+  const totalCustomers = await fetchFilteredCustomers(query, currentPage);
 
     return <CustomersTable pageTitle={pageTitle} customers={totalCustomers} query={query}/> ;
   }

@@ -3,16 +3,21 @@ import Search from '@/app/ui/search';
 import { CreateCustomer, UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { FormattedCustomersTable } from '@/app/lib/definitions';
+import { fetchCustomersPages } from '@/app/lib/data';
+import Pagination from '../pagination';
 
 export default async function CustomersTable({
   query,
   pageTitle,
-  customers,
+  customers
 }: {
   query: string;
   pageTitle: string;
   customers: FormattedCustomersTable[];
 }) {
+
+  const totalPages = await fetchCustomersPages(query);
+
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
@@ -76,8 +81,8 @@ export default async function CustomersTable({
                   </div>
                 ))}
               </div>
-              <table className="hidden min-w-full rounded-md text-gray-900 md:table">
-                <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
+              <table className="hidden min-w-full text-gray-900 md:table">
+                <thead className="rounded-lg text-left text-sm font-normal">
                   <tr>
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
                       Name
@@ -100,11 +105,11 @@ export default async function CustomersTable({
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-gray-200 text-gray-900">
-                  {customers.length < 1 && <tr className="group"><td colSpan={5} className='bg-white py-5 px-4 text-center'>No results found for &quot;{query}&quot;</td></tr>}
+                <tbody className="bg-white">
+                  {customers.length < 1 && <tr className="group"><td colSpan={5} className='py-3 text-center'>No results found for &quot;{query}&quot;</td></tr>}
                   {customers.map((customer) => (
-                    <tr key={customer.id} className="group">
-                      <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
+                    <tr key={customer.id} className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+                      <td className="whitespace-nowrap py-3 pl-6 pr-3">
                         <div className="flex items-center gap-3">
                           <Image
                             src={customer.image_url}
@@ -116,19 +121,19 @@ export default async function CustomersTable({
                           <p>{customer.name}</p>
                         </div>
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      <td className="whitespace-nowrap px-3 py-3">
                         {customer.email}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      <td className="whitespace-nowrap px-3 py-3">
                         {customer.total_invoices}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      <td className="whitespace-nowrap px-3 py-3">
                         {customer.total_pending}
                       </td>
-                      <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      <td className="whitespace-nowrap px-3 py-3">
                         {customer.total_paid}
                       </td>
-                      <td className="whitespace-nowrap  bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
+                      <td className="whitespace-nowrap px-3 py-3">
                         <div className="flex justify-end gap-3">
                           <UpdateCustomer id={customer.id} />
                           <DeleteCustomer id={customer.id} />
@@ -142,6 +147,9 @@ export default async function CustomersTable({
           </div>
         </div>
       </div>
+      <div className="mt-5 flex w-full justify-center">
+        < Pagination totalPages={totalPages} />
+      </div>      
     </div>
   );
 }
